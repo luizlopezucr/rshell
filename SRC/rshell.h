@@ -1,5 +1,3 @@
-#ifndef _RHSELL
-#define _RHSELL
 #include <iostream>
 #include <unistd.h>
 #include <stdio.h>
@@ -50,7 +48,9 @@ class RSHELL {
 	  gethostname(hostname, 255);
 	  cout << user << "@"<< hostname << "$";
 	}
+	//returns current input string
+        string in(){return input;}
+	//allows you to manually set input string
+	void set_in(string tmp){input = tmp;}
 };
 
-
-#endif
