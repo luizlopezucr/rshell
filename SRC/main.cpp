@@ -1,10 +1,10 @@
-
-#include "command.h"
+#include "execute.h"
 
 int main()
 {
   RSHELL interface;
   COMMAND com;
+  EXECUTE shell;
 	
   while(interface.exit_r == false)
   {
@@ -15,6 +15,9 @@ int main()
     {
       com.set_in(interface.in());
       com.cmd_list();
+	  shell.cmd_run = com.cmd_run;
+	  shell.execute();
+	  com.wipe();
     }
   }
 

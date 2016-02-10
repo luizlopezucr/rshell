@@ -1,11 +1,14 @@
 #include "rshell.h"
 
 class COMMAND:public RSHELL{
-  private:
-   vector<char *>cmd_run;
-  
   public:
+   vector<char *>cmd_run;
    COMMAND():RSHELL(){}
+   //reset the vector
+   void wipe()
+   {
+	cmd_run.clear();
+   }
    void cmd_list()
    {
 	  //Removes any comments from input and 
