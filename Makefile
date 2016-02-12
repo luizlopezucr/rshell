@@ -6,10 +6,12 @@ FILES = main.cpp
 CXXFLAGS = -Wall -Werror -ansi -pedantic
 
 all:
+		mkdir -p $(BIN)
 		cd $(SRC_PATH) ; $(CXX) $(CXXFLAGS) $(FILES) -o $(OUT_PATH)
 
 rshell:
+		mkdir -p $(BIN)
 		cd $(SRC_PATH) ; $(CXX) $(CXXFLAGS) $(FILES) -o $(OUT_PATH)
 
 clean:
-		rm -rf $(OUT_PATH)
+		rm -rf $(BIN)
