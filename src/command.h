@@ -33,43 +33,23 @@ class COMMAND:public RSHELL{
 	  for(unsigned i = 0; i < cmd_run.size(); ++i)
 		{
 			string tmp = cmd_run.at(i);
-			if(tmp.find(";") != string::npos && tmp != ";")
+			string con[] = { ";","&&","||"};
+
+			for(unsigned j = 0; j < 3 ; ++j)
 			{
-				if(tmp.at(tmp.size()-1) == ';')
+
+				if(tmp.find(con[j]) != string::npos && tmp != con[j])
 				{
-					tmp = tmp.substr(0,tmp.size()-1);
-					cmd_run.at(i) = strdup(tmp.c_str());
-					it = cmd_run.begin() + i + 1;
-					string col = ";";
-					cmd_run.insert(it,strdup(col.c_str()));
+					if(tmp.find(con[j]) != 0)
+					{
+						tmp = tmp.substr(0,tmp.find(con[j]));
+						cmd_run.at(i) = strdup(tmp.c_str());
+						it = cmd_run.begin() + i + 1;
+						string col = con[j];
+						cmd_run.insert(it,strdup(col.c_str()));
+					}
+
 				}
-
-			}
-
-			if(tmp.find("&&") != string::npos && tmp != "&&")
-			{
-				if(tmp.at(tmp.size()-1) == ';')
-				{
-					tmp = tmp.substr(0,tmp.size()-1);
-					cmd_run.at(i) = strdup(tmp.c_str());
-					it = cmd_run.begin() + i + 1;
-					string col = "&&";
-					cmd_run.insert(it,strdup(col.c_str()));
-				}
-
-			}
-
-			if(tmp.find("||") != string::npos && tmp != "||")
-			{
-				if(tmp.at(tmp.size()-1) == ';')
-				{
-					tmp = tmp.substr(0,tmp.size()-1);
-					cmd_run.at(i) = strdup(tmp.c_str());
-					it = cmd_run.begin() + i + 1;
-					string col = "&&";
-					cmd_run.insert(it,strdup(col.c_str()));
-				}
-
 			}
 
 		}
