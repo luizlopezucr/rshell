@@ -10,4 +10,3 @@ ls || echo noprint#before a (&&) echo stillno; echo yes
 echo hello #nothing at the end
 exit
 EOF
-exit
