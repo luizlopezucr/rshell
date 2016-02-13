@@ -129,6 +129,8 @@ class EXECUTE: public COMMAND{
 				}
 
 			}
+			//executes the last string of commands based on the last
+			//logical operators
 			if(fa && good_exc)execute(buff);
 			if(fo && !good_exc)execute(buff);
 			if(!fa && !fo)execute(buff);
