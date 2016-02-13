@@ -7,4 +7,4 @@ ls -la
 rmdir somedir
 exit
 EOF
-exit
+
