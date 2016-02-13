@@ -8,9 +8,11 @@ class EXECUTE: public COMMAND{
 		bool good_exc;
 
 	public:
+		//default constructor
 		EXECUTE():COMMAND(){good_exc=true;}
 		void execute(vector<char *> tmp)
 		{
+		    //set size of he vector to size + 1 to account for the null character
 			int size = tmp.size() + 1;
 			char** argv = new char*[size];
 
@@ -31,6 +33,7 @@ class EXECUTE: public COMMAND{
 				perror("ERROR: forking child process failed\n");
 				exit(1);
 			}
+			//if pid == 0 then it is the child
 			else if (pid == 0)
 			{
 
@@ -43,11 +46,15 @@ class EXECUTE: public COMMAND{
 					exit(1);
 				}
 			}
+			//if pid != 0 then we are in the parent
 			else
 			{
+				//wait for the child to finish and free up space to prevent zombie state
+				//if an error occurs output to std err
 				if(-1 == wait(0)) perror ("There was an error with wait().");
 				
 			}
+			//free up memory after use
 			delete argv;
 		}
 
@@ -63,33 +70,44 @@ class EXECUTE: public COMMAND{
 
 			for(unsigned i = 0; i < cmd_run.size(); ++i)
 			{
+				//stores the cstring in string
 				cmd = cmd_run.at(i);
+				//ifs to check for connectors 
 				if(cmd  == ";")
 				{
+				    //checks to see how it should execute the commands before it
 					if(fa && good_exc)execute(buff);
 					if(fo && !good_exc)execute(buff);
 					if(!fa && !fo)execute(buff);
+					//reset the values
 					fa = false;
 					fo = false;
+					//clear out the string we just executed
 					buff.clear();
 				}
 				else if(cmd == "&&")
 				{
 					if(!fa)
 					{
+				      //execute the command before it
 					  execute(buff);
+					  //clear
 					  buff.clear();
+					  //set found and to true
 					  fa = true;
 					  fo = false;
 					}
+					//if there was an && and the previos command worked then execute
 					if(fa && good_exc)
 					{
+				
 					  execute(buff);
 					  buff.clear();
 					}  
 				}
 				else if(cmd == "||")
 				{
+		            //if is no or so far set the or two true and set & to false
 					if(!fo)
 					{
 					  execute(buff);
@@ -97,6 +115,7 @@ class EXECUTE: public COMMAND{
 					  fo = true;
 					  fa = false;
 					}
+					//if there was an or and the previous command failed execute
 					if(fo && !good_exc)
 					{
 					  execute(buff);
@@ -104,7 +123,8 @@ class EXECUTE: public COMMAND{
 					}  
 				}
 				else
-				{	
+				{
+				    //if no connectors push the string
 					buff.push_back(cmd_run.at(i));
 				}
 
