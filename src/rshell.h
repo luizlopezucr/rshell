@@ -33,7 +33,7 @@ class RSHELL {
 	//grabs user input and stores it in a string.
 	void get_input()
 	{
-	  getline(cin, input);
+		getline(cin, input);
 		if(input == "exit")
 		{
 		  exit_r = true;
