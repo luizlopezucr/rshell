@@ -8,5 +8,6 @@ ls -a && #after a (&&) echo true &&  rmdir fakename || mkdir testing; echo end
 ls ||# 
 ls || echo noprint#before a (&&) echo stillno; echo yes  
 echo hello #nothing at the end
+exit
 EOF
 exit

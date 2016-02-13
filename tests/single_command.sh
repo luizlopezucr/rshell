@@ -5,5 +5,6 @@ ls -a -r
 mkdir somedir
 ls -la
 rmdir somedir
+exit
 EOF
 exit
