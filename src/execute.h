@@ -49,10 +49,17 @@ class EXECUTE: public COMMAND{
 			//if pid != 0 then we are in the parent
 			else
 			{
+				//int to store status for wait to write to
+				int status;
+				wait(&status);
+				//checks to see if child didn't terminate normally
+				//the argument failed
+				if(!WIFEXITED(status))
+				{
+						good_exc = false;
+				}
 				//wait for the child to finish and free up space to prevent zombie state
 				//if an error occurs output to std err
-				if(-1 == wait(0)) perror ("There was an error with wait().");
-				
 			}
 			//free up memory after use
 			delete argv;
