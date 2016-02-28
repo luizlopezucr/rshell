@@ -52,14 +52,11 @@ class EXECUTE: public COMMAND{
 				//int to store status for wait to write to
 				int status;
 				wait(&status);
+				
 				//checks to see if child didn't terminate normally
-				//the argument failed
-				if(!WIFEXITED(status))
-				{
-						good_exc = false;
-				}
+				//set good_exc accordingly
+				good_exc = (status == 0);
 				//wait for the child to finish and free up space to prevent zombie state
-				//if an error occurs output to std err
 			}
 			//free up memory after use
 			delete argv;
@@ -77,6 +74,7 @@ class EXECUTE: public COMMAND{
 
 			for(unsigned i = 0; i < cmd_run.size(); ++i)
 			{
+				
 				//stores the cstring in string
 				cmd = cmd_run.at(i);
 				//ifs to check for connectors 
@@ -129,7 +127,7 @@ class EXECUTE: public COMMAND{
 					//if not the base case then don't execute  if there was an || and the exec succeeded
 					else if(fo && good_exc || fa && !good_exc)
 				    {
-						good_exc = false;
+						//good_exc = false;
 						buff.clear();
 				    }
 					//set the bool values of the operator we encountered
