@@ -51,12 +51,11 @@ class EXECUTE: public COMMAND{
 			{
 				//int to store status for wait to write to
 				int status;
-				wait(&status);
-				
+				//wait for the child to finish and free up space to prevent zombie state
+				wait(&status);	
 				//checks to see if child didn't terminate normally
 				//set good_exc accordingly
 				good_exc = (status == 0);
-				//wait for the child to finish and free up space to prevent zombie state
 			}
 			//free up memory after use
 			delete argv;
