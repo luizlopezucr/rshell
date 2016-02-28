@@ -3,6 +3,7 @@
 class COMMAND:public RSHELL{
   public:
    vector<char *>cmd_run;
+   bool missing_para;
    COMMAND():RSHELL(){}
    //reset the vector
    void wipe()
@@ -36,41 +37,62 @@ class COMMAND:public RSHELL{
 	  }
 	  //declaring an iterator to keep track of position in vector
 	  vector<char *>::iterator it;
+	  //variable to keep track of parentheses matching
+	  int depth = 0;
+	  //instantiate the bool to false initially
+	  bool missing_para = false;
 	  //while there are still commands to be read
 	  for(unsigned i = 0; i < cmd_run.size(); ++i)
 		{
 		    //store each token string in a temp
 			string tmp = cmd_run.at(i);
 			//an array of connectors to check for
-			string con[] = { ";","&&","||"};
+			string con[] = { ";","&&","||", "(", ")"};
 		    //check the strings for these connectors
-			for(unsigned j = 0; j < 3 ; ++j)
-			{
-				//if there is no connector for the whole length of the string
-				if(tmp.find(con[j]) != string::npos && tmp != con[j])
-				{
-				//if it is found
-					if(tmp.find(con[j]) != 0)
-					{
-						//deliminate at the position found for the connector
-						tmp = tmp.substr(0,tmp.find(con[j]));
-						//get the cstring and allocate memory for it
-						//assign this shortened cstring the position we are pointing at
-						cmd_run.at(i) = strdup(tmp.c_str());
-						//set the iterator to point to where we need to insert
-						//it is + 1 since it we split the substring in 2
-						it = cmd_run.begin() + i + 1;
-						//creating a temp string to store the connector
-						string col = con[j];
-						//inserting the connector 
-						cmd_run.insert(it,strdup(col.c_str()));
-					}
-
+			for(unsigned j = 0; j < 5 ; ++j)
+			{	
+				int pos = tmp.find(con[j]);
+				//if there is a connector for the whole length of the string
+				if(pos != string::npos && tmp != con[j])
+				{		
+						//store the connector in the current position	
+						cmd_run.at(i) = strdup(con[j].c_str());
+						//if there is more after connector
+						if(pos + con[j].size() < tmp.size() )
+						{
+								//insert after the connector
+								it = cmd_run.begin() + i + 1;
+								cmd_run.insert(it, strdup((tmp.substr(pos + con[j].size(), tmp.size())).c_str()));
+						}
+						//if there is something before the connector
+						if(pos > 0)
+						{
+								//insert before the connector
+								it = cmd_run.begin() + i;
+								cmd_run.insert(it, strdup(((tmp.substr(0, pos)).c_str())));
+						}
 				}
+				
 			}
-
+			
 		}
-
+		//checks for mismatched parentheses
+		for(unsigned i = 0; i < cmd_run.size(); i++)
+		{
+				string temp = cmd_run[i];
+				if(temp == "(" || temp  == ")")
+						temp  == "(" ? depth++ : depth--;
+		}
+		//if mismatched then output an error and set the bool variable accordingly
+		if(depth != 0)
+		{
+				//set error to invalid argument
+				errno = EINVAL ;
+				//output string error to stderr
+				perror("ERROR: MISSING PARENTHESES");
+				//set bool accordingly
+				missing_para = true;
+		}
    }
    
 };
