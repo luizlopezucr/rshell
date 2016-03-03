@@ -49,10 +49,13 @@ class EXECUTE: public COMMAND{
 			//if pid != 0 then we are in the parent
 			else
 			{
+				//int to store status for wait to write to
+				int status;
 				//wait for the child to finish and free up space to prevent zombie state
-				//if an error occurs output to std err
-				if(-1 == wait(0)) perror ("There was an error with wait().");
-				
+				wait(&status);	
+				//checks to see if child didn't terminate normally
+				//set good_exc accordingly
+				good_exc = (status == 0);
 			}
 			//free up memory after use
 			delete argv;
@@ -70,6 +73,7 @@ class EXECUTE: public COMMAND{
 
 			for(unsigned i = 0; i < cmd_run.size(); ++i)
 			{
+				
 				//stores the cstring in string
 				cmd = cmd_run.at(i);
 				//ifs to check for connectors 
@@ -87,40 +91,47 @@ class EXECUTE: public COMMAND{
 				}
 				else if(cmd == "&&")
 				{
-					if(!fa)
+					
+					//if there was an || and the previous command didn't succeed then execute
+					//if there was an && and the previous command worked then execute
+				    //takes care of this being the first op
+					if(fa && good_exc || fo && !good_exc || !fa && !fo)
 					{
-				      //execute the command before it
 					  execute(buff);
-					  //clear
 					  buff.clear();
-					  //set found and to true
-					  fa = true;
-					  fo = false;
 					}
-					//if there was an && and the previos command worked then execute
-					if(fa && good_exc)
-					{
-				
-					  execute(buff);
-					  buff.clear();
-					}  
+				    
+					//if not meant to execute then do this 
+					//and set the value to false
+				    else if(fa && !good_exc || fo && good_exc)
+				    {
+						good_exc = false;
+						buff.clear();
+					}
+					//set the bool values of the operator we encountered
+					fa = true;
+				    fo = false;
 				}
 				else if(cmd == "||")
 				{
-		            //if is no or so far set the or two true and set & to false
-					if(!fo)
+					
+					//if there was an && and the previous command succeeded
+					//if there was an ||  and the previous command failed execute
+					//takes care of this being the first op
+					if(fo && !good_exc || fa && good_exc || !fo && !fa) 
 					{
 					  execute(buff);
 					  buff.clear();
-					  fo = true;
-					  fa = false;
 					}
-					//if there was an or and the previous command failed execute
-					if(fo && !good_exc)
-					{
-					  execute(buff);
-					  buff.clear();
-					}  
+					//if not the base case then don't execute  if there was an || and the exec succeeded
+					else if(fo && good_exc || fa && !good_exc)
+				    {
+						//good_exc = false;
+						buff.clear();
+				    }
+					//set the bool values of the operator we encountered
+				    fo = true;
+				    fa = false;
 				}
 				else
 				{
@@ -134,5 +145,7 @@ class EXECUTE: public COMMAND{
 			if(fa && good_exc)execute(buff);
 			if(fo && !good_exc)execute(buff);
 			if(!fa && !fo)execute(buff);
+			//reset value of good_exc
+			good_exc = true;
 		}
 };
