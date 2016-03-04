@@ -2,11 +2,8 @@
 
 
 class EXECUTE: public COMMAND{
-
-	private:
-		//keeps track if commands execute properly.
+    private:
 		bool good_exc;
-
 	public:
 		//default constructor
 		EXECUTE():COMMAND(){good_exc=true;}
@@ -61,17 +58,19 @@ class EXECUTE: public COMMAND{
 			delete argv;
 		}
 
-		void exec_main()
+		//base recursive function
+		bool exec_main(int start_index, int& end_index)
 		{
 			vector<char *> buff;
 			string cmd;
-
+			//resets the value of good_exc
+			good_exc = true;
 			//keeps track of whether "&&" or "||" has been found.
 			bool fa = false;
 			bool fo = false;
 
 
-			for(unsigned i = 0; i < cmd_run.size(); ++i)
+			for(unsigned i = start_index; i < end_index; ++i)
 			{
 				
 				//stores the cstring in string
@@ -145,7 +144,6 @@ class EXECUTE: public COMMAND{
 			if(fa && good_exc)execute(buff);
 			if(fo && !good_exc)execute(buff);
 			if(!fa && !fo)execute(buff);
-			//reset value of good_exc
-			good_exc = true;
+		    return good_exc;
 		}
 };

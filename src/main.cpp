@@ -24,7 +24,9 @@ int main()
       //set the parsed vector to the one for execute
 	  shell.cmd_run = com.cmd_run;
 	  //execute
-	  shell.exec_main();
+	  int size = shell.cmd_run.size();
+	  int& ref = size;
+	  shell.exec_main(0, ref);
 	  //clear the vector
 	  com.wipe();
     }
