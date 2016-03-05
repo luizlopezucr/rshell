@@ -21,14 +21,17 @@ int main()
       com.set_in(interface.in());
       //parse
       com.cmd_list();
-      //set the parsed vector to the one for execute
-	  shell.cmd_run = com.cmd_run;
-	  //execute
-	  int size = shell.cmd_run.size();
-	  int& ref = size;
-	  shell.exec_main(0, ref);
-	  //clear the vector
-	  com.wipe();
+      if(!com.input_err)
+      {
+		//set the parsed vector to the one for execute
+		shell.cmd_run = com.cmd_run;
+		//execute
+		int init = 0;
+		int& ref = init;
+		shell.exec_main(0, ref);
+		//clear the vector
+		com.wipe();
+      }
     }
   }
 
