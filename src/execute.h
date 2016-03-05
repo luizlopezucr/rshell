@@ -76,26 +76,29 @@ class EXECUTE: public COMMAND{
 			for(int i = start_index; i < cmd_run.size(); i++ )
 		    {
 		    	//update i if necessary
-				if(left_off != 0)
+				if(left_off != 0 && i <= left_off)
 						i = left_off;
-				if(left_off == cmd_run.size())
+				//if left off at the end break out of the loop
+				if(i == cmd_run.size())
 						break;
-				//stores the cstring in string
 				cmd = cmd_run[i];
+				//stores the cstring in string
 				//if close paren execute the current stack
 				if(cmd == ")")
 				{
-				//executes the last string of commands based on the last
-				//logical operators
-				 if(fa && good_exc)execute(buff);
-				if(fo && !good_exc)execute(buff);
-				if(!fa && !fo)execute(buff);
-				buff.clear();
+				    //executes the last string of commands based on the last
+				    //logical operators
+				    if(fa && good_exc)execute(buff);
+				    else if(fo && !good_exc)execute(buff);
+				    else if(!fa && !fo)execute(buff);
+				    //if does not meet conditions good_exc is false
+				    else if(!fo)
+						good_exc = false;
+				    buff.clear();
 				    open_paren = false;
 				    close_paren = true;
 					left_off = ++i;
-					execute(buff);
-					buff.clear();
+				
 					return;
 				}
 				//if open paren go down a stack level
@@ -126,6 +129,7 @@ class EXECUTE: public COMMAND{
 							//if there was an || and the previous command didn't succeed then execute
 							//if there was an && and the previous command worked then execute
 							//takes care of this being the first op
+						
 							if((fa && good_exc || fo && !good_exc || !fa && !fo) && !close_paren )
 							{
 								execute(buff);
@@ -139,6 +143,11 @@ class EXECUTE: public COMMAND{
 								good_exc = false;
 								buff.clear();
 							}
+							//close paren is true do nothing since the work has already been done
+							else 
+						    {
+								buff.clear();			
+						    }
 							//set the bool values of the operator we encountered
 							fa = true;
 							fo = false;
@@ -159,7 +168,11 @@ class EXECUTE: public COMMAND{
 						    {	
 								buff.clear();
 						    }
-						
+						    //close paren is true do nothing since the work has already been done
+						    else
+						    {
+						    		 buff.clear();
+						    }
 						    //think about what to put in here
 							//set the bool values of the operator we encountered
 							fo = true;
