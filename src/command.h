@@ -4,7 +4,7 @@ class COMMAND:public RSHELL{
   public:
    vector<char *>cmd_run;
    bool input_err;
-   COMMAND():RSHELL(){}
+   COMMAND():RSHELL(){input_err= false;}
    //reset the vector
    void wipe()
    {
@@ -37,10 +37,7 @@ class COMMAND:public RSHELL{
 	  }
 	  //declaring an iterator to keep track of position in vector
 	  vector<char *>::iterator it;
-	  //variable to keep track of parentheses matching
-	  int depth = 0;
-	  //instantiate the bool to false initially
-	  bool input_err  = false;
+	 
 
       string con[] = { ";","&&","||", "(", ")"};
 	  //while there are still commands to be read
@@ -79,6 +76,8 @@ class COMMAND:public RSHELL{
 			}
 			
 		}
+		 //variable to keep track of parentheses matching
+		int depth = 0;
 		for(unsigned i = 0; i < cmd_run.size(); i++)
 		{
 				//checks for mismatched parentheses
@@ -89,14 +88,15 @@ class COMMAND:public RSHELL{
 				}
 		}
 		//if mismatched then output an error and set the bool variable accordingly
+			
 		if(depth != 0)
 		{
+				//set bool accordingly
+				input_err = true;
 				//set error to invalid argument
 				errno = EINVAL ;
 				//output string error to stderr
 				perror("ERROR: MISSING PARENTHESES");
-				//set bool accordingly
-				input_err = true;
 		}
    }
 };

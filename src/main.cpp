@@ -9,18 +9,23 @@ int main()
   //until the user enters exit keep prompting for commands
   while(interface.exit_r == false)
   {
+    
     //prints the extra credit
     interface.print();
     //receives the line input
     interface.get_input();
     //if the input is exit it exits the loop
+    
     if(interface.exit_r == true)break;
     else
     {
+      //reset input_err
       //sets the data received 
       com.set_in(interface.in());
+      
       //parse
       com.cmd_list();
+      
       if(!com.input_err)
       {
 		//set the parsed vector to the one for execute
@@ -32,6 +37,14 @@ int main()
 		//clear the vector
 		com.wipe();
       }
+      else
+      {
+      		  //wipe user input since it was invalid
+      		  com.wipe();
+      		  //reset the error
+		      com.input_err = false;
+	  }
+
     }
   }
 
