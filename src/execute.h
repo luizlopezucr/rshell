@@ -75,6 +75,8 @@ class EXECUTE: public COMMAND{
 			
 			for(int i = start_index; i < cmd_run.size(); i++ )
 		    {
+		    	//a bool which will only be true when the CALLING function returns after being recursed down
+		    	bool myOverride = false;
 		    	//update i if necessary
 				if(left_off != 0 && i <= left_off)
 						i = left_off;
@@ -107,10 +109,12 @@ class EXECUTE: public COMMAND{
 						open_paren = true;
 						//before recursing see if override needs to be set
 						if((fo && good_exc) || (fa && !good_exc))
-								overrider = true;
+						{		
+								overrider = myOverride = true;
+						}
 						exec_main(++i, left_off);
 						//after recursing back
-						if(overrider)
+						if(myOverride)
 								overrider = false;
 				}
 				else
