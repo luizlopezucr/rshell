@@ -1,4 +1,5 @@
 #include "command.h"
+#include "test.h"
 
 
 class EXECUTE: public COMMAND{
@@ -16,53 +17,67 @@ class EXECUTE: public COMMAND{
 		bool ext(){return exit_e;};
 		void execute(vector<char *> tmp)
 		{
-		    //set size of he vector to size + 1 to account for the null character
-			int size = tmp.size() + 1;
-			char** argv = new char*[size];
-
-			//converts vector to array
-			for(unsigned i = 0; i < tmp.size(); ++i)	
+			string var = tmp.at(0);
+			if(var == "test" || var == "[")
 			{
-				argv[i] = tmp.at(i);	
-
-			}
-			//execvp requires terminating null character.							
-			argv[tmp.size()] = '\0';
-
-			//forks a new process for execvp
-			int  pid = fork();
-			if(pid < 0)
-			{
-				//if child process failed to create output message.
-				perror("ERROR: forking child process failed\n");
-				exit(1);
-			}
-			//if pid == 0 then it is the child
-			else if (pid == 0)
-			{
-
-				//checks if execvp failed, if it did it outputs that
-				//that it had a error and changes the good_exc to false.
-				if (execvp(argv[0], argv) == -1)
+				var = tmp.at(1);
+				string dir = tmp.at(2);
+				if(var == "-e"|| var == "-d" || var == "-f")
 				{
-					perror("ERROR: CMD execution failed.\n");
-					good_exc = false;
-					exit(1);
+					good_exc = test_funct(dir, var);
 				}
+				else good_exc = test_funct(dir, "-e");
 			}
-			//if pid != 0 then we are in the parent
 			else
 			{
-				//int to store status for wait to write to
-				int status;
-				//wait for the child to finish and free up space to prevent zombie state
-				wait(&status);	
-				//checks to see if child didn't terminate normally
-				//set good_exc accordingly
-				good_exc = (status == 0);
+				//set size of he vector to size + 1 to account for the null character
+				int size = tmp.size() + 1;
+				char** argv = new char*[size];
+				
+				//converts vector to array
+				for(unsigned i = 0; i < tmp.size(); ++i)	
+				{
+					argv[i] = tmp.at(i);	
+
+				}
+				//execvp requires terminating null character.							
+				argv[tmp.size()] = '\0';
+
+				//forks a new process for execvp
+				int  pid = fork();
+				if(pid < 0)
+				{
+					//if child process failed to create output message.
+					perror("ERROR: forking child process failed\n");
+					exit(1);
+				}
+				//if pid == 0 then it is the child
+				else if (pid == 0)
+				{
+
+					//checks if execvp failed, if it did it outputs that
+					//that it had a error and changes the good_exc to false.
+					if (execvp(argv[0], argv) == -1)
+					{
+						perror("ERROR: CMD execution failed.\n");
+						good_exc = false;
+						exit(1);
+					}
+				}
+				//if pid != 0 then we are in the parent
+				else
+				{
+					//int to store status for wait to write to
+					int status;
+					//wait for the child to finish and free up space to prevent zombie state
+					wait(&status);	
+					//checks to see if child didn't terminate normally
+					//set good_exc accordingly
+					good_exc = (status == 0);
+				}
+				//free up memory after use
+				delete argv;
 			}
-			//free up memory after use
-			delete argv;
 		}
 
 		//base recursive function
