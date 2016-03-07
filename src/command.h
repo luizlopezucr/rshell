@@ -52,7 +52,7 @@ class COMMAND:public RSHELL{
 			{	
 				int pos = tmp.find(con[j]);
 				//if there is a connector for the whole length of the string
-				if(pos != string::npos && tmp != con[j] && !con_found)
+				if(pos != -1 && tmp != con[j] && !con_found)
 				{		
 						con_found = true;
 						//store the connector in the current position	

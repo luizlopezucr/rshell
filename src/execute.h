@@ -66,7 +66,7 @@ class EXECUTE: public COMMAND{
 		}
 
 		//base recursive function
-		void exec_main(int start_index, int& left_off)
+		void exec_main(unsigned start_index, unsigned& left_off)
 		{
 			vector<char *> buff;
 			string cmd;
@@ -76,7 +76,7 @@ class EXECUTE: public COMMAND{
 			bool fa = false;
 			bool fo = false;
 			
-			for(int i = start_index; i < cmd_run.size(); i++ )
+			for(unsigned i = start_index; i < cmd_run.size(); i++ )
 		    {
 		    	//a bool which will only be true when the CALLING function returns after being recursed down
 		    	bool myOverride = false;
@@ -153,7 +153,7 @@ class EXECUTE: public COMMAND{
 										//if there was an && and the previous command worked then execute
 										//takes care of this being the first op
 						
-										if((fa && good_exc || fo && !good_exc || !fa && !fo) && !close_paren )
+										if(((fa && good_exc) || (fo && !good_exc) || (!fa && !fo)) && !close_paren )
 										{	
 												execute(buff);
 												buff.clear();
@@ -161,7 +161,7 @@ class EXECUTE: public COMMAND{
 				    
 										//if not meant to execute then do this 
 										//and set the value to false
-										else if((fa && !good_exc || fo && good_exc) && !close_paren)
+										else if(((fa && !good_exc) || (fo && good_exc)) && !close_paren)
 										{
 												good_exc = false;
 												buff.clear();
@@ -179,13 +179,13 @@ class EXECUTE: public COMMAND{
 										//if there was an && and the previous command succeeded
 										//if there was an ||  and the previous command failed execute
 										//takes care of this being the first op
-										if((fo && !good_exc || fa && good_exc || !fo && !fa) && !close_paren) 
+										if(((fo && !good_exc) || (fa && good_exc) || (!fo && !fa)) && !close_paren) 
 										{
 												execute(buff);
 												buff.clear();
 										}
 										//if not the base case then don't execute  if there was an || and the exec succeeded
-										else if((fo && good_exc || fa && !good_exc) && !close_paren)
+										else if(((fo && good_exc) || (fa && !good_exc)) && !close_paren)
 										{	
 												buff.clear();
 										}

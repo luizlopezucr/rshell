@@ -31,8 +31,8 @@ int main()
 		//set the parsed vector to the one for execute
 		shell.cmd_run = com.cmd_run;
 		//execute
-		int init = 0;
-		int& ref = init;
+		unsigned init = 0;
+		unsigned& ref = init;
 		shell.exec_main(0, ref);
 		//clear the vector
 		com.wipe();
