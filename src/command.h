@@ -1,5 +1,5 @@
 #include "rshell.h"
-
+#include "errno.h"
 class COMMAND:public RSHELL{
   public:
    vector<char *>cmd_run;

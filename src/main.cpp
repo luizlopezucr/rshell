@@ -7,7 +7,7 @@ int main()
   EXECUTE shell;
 	
   //until the user enters exit keep prompting for commands
-  while(interface.exit_r == false)
+  while(interface.exit_r == false && shell.ext() == false)
   {
     
     //prints the extra credit
@@ -16,7 +16,7 @@ int main()
     interface.get_input();
     //if the input is exit it exits the loop
     
-    if(interface.exit_r == true)break;
+    if(interface.exit_r == true || shell.ext() == true)break;
     else
     {
       //reset input_err

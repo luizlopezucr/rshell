@@ -8,9 +8,12 @@ class EXECUTE: public COMMAND{
 		bool close_paren;
 		bool open_paren;
 		bool overrider;
+		bool exit_e;
 	public:
 		//default constructor
-		EXECUTE():COMMAND(){good_exc=true;close_paren = open_paren = overrider = false;}
+		EXECUTE():COMMAND(){good_exc=true;close_paren = open_paren = overrider = exit_e = false;}
+
+		bool ext(){return exit_e;};
 		void execute(vector<char *> tmp)
 		{
 		    //set size of he vector to size + 1 to account for the null character
@@ -85,6 +88,12 @@ class EXECUTE: public COMMAND{
 						break;
 				cmd = cmd_run[i];
 				//stores the cstring in string
+				
+				if(cmd == "exit")
+				{
+					exit_e = true;
+					break;
+				}
 				//if close paren execute the current stack
 				if(cmd == ")")
 				{
