@@ -94,7 +94,7 @@ class EXECUTE: public COMMAND{
 				    {
 						if(fa && good_exc)execute(buff);
 						else if(fo && !good_exc)execute(buff);
-						else if(!fa && !fo)execute(buff);
+						else if(!fa && !fo && !buff.empty())execute(buff);
 						buff.clear();
 				    }
 				    open_paren = false;
