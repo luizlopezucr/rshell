@@ -4,7 +4,7 @@
 using namespace std;
 
 
-bool test_funct(string dir, char flag)
+bool test_funct(string dir, string flag)
 {
 	//variable we return
 	bool test_r = false;
@@ -13,14 +13,14 @@ bool test_funct(string dir, char flag)
 	**on file or Directory*/
 	struct stat f_stats;
 
-	if(flag == 'e')
+	if(flag == "-e")
 	{
 		//returns true if file or directory is exist
 		test_r = ( stat(dir.c_str(), &f_stats) == 0);
 	}
 	 	
 	
-	if(flag == 'd')
+	if(flag == "-d")
 	{
 		//returns true if file or directory is exist
 		test_r = ( stat(dir.c_str(), &f_stats) == 0);
@@ -34,7 +34,7 @@ bool test_funct(string dir, char flag)
 		}
 	}
 
-	if(flag == 'f')
+	if(flag == "-f")
 	{	
 		//returns true if file or directory is exist
 		test_r = ( stat(dir.c_str(), &f_stats) == 0);
